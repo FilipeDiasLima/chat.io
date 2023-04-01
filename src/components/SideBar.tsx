@@ -24,8 +24,6 @@ export function SideBar() {
       bg-white 
       dark:bg-gray-600
       shadow-md 
-      shadow-right
-      shadow-bottom
       transition-all duration-300 ease-out
       "
     >

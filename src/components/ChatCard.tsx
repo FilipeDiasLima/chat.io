@@ -10,7 +10,7 @@ export function ChatCard({ isSelected = false }: ChatCardProps) {
         flex-row 
         w-full 
         rounded-3xl
-        bg-${isSelected ? "yellow-light" : "transparent"}
+        ${isSelected ? "bg-yellow-light" : "bg-transparent"}
         p-3 
         items-center 
         justify-between 
@@ -26,7 +26,11 @@ export function ChatCard({ isSelected = false }: ChatCardProps) {
           alt="Filipe Dias"
         />
         <div className="flex flex-col w-full justify-evenly">
-          <strong className="text-purple dark:text-blue-secondary">
+          <strong
+            className={`text-purple ${
+              isSelected ? "" : "dark:text-blue-secondary"
+            } `}
+          >
             Filipe Dias
           </strong>
           <span
