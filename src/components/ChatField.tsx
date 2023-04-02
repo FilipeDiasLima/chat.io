@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import { MessageBox } from "./MessageBox";
 import { Scrollbar } from "./Scrollbar";
 import { WriteMessage } from "./WriteMessage";
 
 export function ChatField() {
   const marginLeft = "ml-[300px]";
+
+  useEffect(() => {
+    // Definir a posição do scroll para o final ao carregar a página
+    window.scrollTo(0, document.body.scrollHeight);
+  }, []);
+
   return (
     <div
       className={`
@@ -27,7 +34,7 @@ export function ChatField() {
         "
       >
         {Array.from(Array(10)).map((item, index) => (
-          <MessageBox index={index} mine={index % 3 === 0} />
+          <MessageBox key={index} index={index} mine={index % 3 === 0} />
         ))}
       </ul>
 

@@ -29,7 +29,7 @@ export function TopBar() {
       transition-all duration-300 ease-out
       "
     >
-      <button className="p-2 bg-blue-secondary rounded-lg">
+      <button className="p-2 bg-blue-secondary rounded-lg min-[800px]:hidden">
         <HiOutlineMenuAlt2 color="#FFF" size={18} />
       </button>
       <div className="flex flex-row bg-ice-light dark:bg-gray-700 rounded-xl w-3/6 max-[800px]:w-3/5 p-4 max-[800px]:p-2 items-center ">
@@ -37,7 +37,7 @@ export function TopBar() {
         <input
           placeholder="Pesquisar"
           type="text"
-          className="bg-transparent placeholder:text-blue-secondary/80 dark:text-blue-secondary focus:outline-none ml-4 w-full"
+          className="bg-transparent placeholder:text-blue-secondary/80 dark:text-blue-secondary ml-4 w-full"
         />
       </div>
       <ToggleThemeButton />

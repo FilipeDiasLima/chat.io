@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { setCookie, parseCookies } from "nookies";
 
 export function ToggleThemeButton() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -10,6 +11,9 @@ export function ToggleThemeButton() {
 
   function handleThemeToggle() {
     setIsDarkMode(!isDarkMode);
+    setCookie(undefined, "@chatio.theme", isDarkMode ? "dark" : "light", {
+      path: "/",
+    });
     document.documentElement.classList.toggle("dark");
   }
 

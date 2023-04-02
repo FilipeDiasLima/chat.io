@@ -31,6 +31,7 @@ export function MessageBox({ index, mine = false }: Props) {
           ${mine ? "text-purple dark:text-gray-200" : "text-white"} 
           font-light 
           text-sm
+          transition-all duration-200
         `}
       >
         {index} - Lorem ipsum dolor sit, amet consectetur adipisicing elit.
