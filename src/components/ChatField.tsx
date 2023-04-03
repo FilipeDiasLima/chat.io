@@ -1,15 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "../useHook/useAuth";
 import { MessageBox } from "./MessageBox";
 import { Scrollbar } from "./Scrollbar";
 import { WriteMessage } from "./WriteMessage";
+import io, { Socket } from "socket.io-client";
+
+type MessageProps = {
+  text: string;
+  user: string;
+};
+
+const ENDPOINT = "localhost:3333";
+const socket = io(ENDPOINT);
 
 export function ChatField() {
-  const marginLeft = "ml-[300px]";
+  const { username, room } = useAuth();
+
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<MessageProps[]>([]);
+  console.log("🚀 ~ file: ChatField.tsx:21 ~ ChatField ~ messages:", messages);
+
+  function sendMessage() {
+    socket.emit("sendMessage", message.trim(), () => setMessage(""));
+  }
+
+  socket.emit("joinRoom", { name: username, room });
+
+  socket.on("message", (message) => {
+    setMessages([...messages, message]);
+  });
 
   useEffect(() => {
-    // Definir a posição do scroll para o final ao carregar a página
     window.scrollTo(0, document.body.scrollHeight);
   }, []);
+
+  useEffect(() => {
+    socket.emit("join", { name: username, room }, () => {});
+  }, [room, ENDPOINT]);
 
   return (
     <div
@@ -28,17 +55,21 @@ export function ChatField() {
       <ul
         className="
         flex 
-        flex-col-reverse
+        flex-col
         items-center 
         w-full 
         "
       >
-        {Array.from(Array(10)).map((item, index) => (
-          <MessageBox key={index} index={index} mine={index % 3 === 0} />
+        {messages.map((message, index) => (
+          <MessageBox key={index} message={message} name={username} />
         ))}
       </ul>
 
-      <WriteMessage />
+      <WriteMessage
+        message={message}
+        setMessage={setMessage}
+        sendMessage={sendMessage}
+      />
     </div>
   );
 }

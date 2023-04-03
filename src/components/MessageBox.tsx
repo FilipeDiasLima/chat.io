@@ -1,13 +1,17 @@
 type Props = {
-  index: number;
-  mine?: boolean;
+  message: {
+    text: string;
+    user: string;
+  };
+  name: string;
 };
 
-export function MessageBox({ index, mine = false }: Props) {
+export function MessageBox({ message, name }: Props) {
+  const isSentByMe = name.trim().toLowerCase() === message.user;
   return (
     <li
       className={`flex ${
-        mine ? "flex-row-reverse self-end" : "flex-row self-start"
+        isSentByMe ? "flex-row-reverse self-end" : "flex-row self-start"
       } my-1`}
     >
       <img
@@ -17,10 +21,10 @@ export function MessageBox({ index, mine = false }: Props) {
       />
       <p
         className={`
-          ${mine ? "mr-4" : "ml-4"} 
+          ${isSentByMe ? "mr-4" : "ml-4"} 
           max-w-xl
-          ${mine ? "bg-transparent" : "bg-blue-secondary"}
-          ${mine ? "border border-gray-300 dark:border-gray-500" : ""}
+          ${isSentByMe ? "bg-transparent" : "bg-blue-secondary"}
+          ${isSentByMe ? "border border-gray-300 dark:border-gray-500" : ""}
           max-[1440px]:max-w-md 
           max-[1280px]:max-w-sm 
           max-[1024px]:max-w-xs 
@@ -28,14 +32,13 @@ export function MessageBox({ index, mine = false }: Props) {
           max-[600px]:max-w-xs 
           p-4 
           rounded-3xl 
-          ${mine ? "text-purple dark:text-gray-200" : "text-white"} 
+          ${isSentByMe ? "text-purple dark:text-gray-200" : "text-white"} 
           font-light 
           text-sm
           transition-all duration-200
         `}
       >
-        {index} - Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-        Voluptatem exercitationem f
+        {message.text}
       </p>
     </li>
   );

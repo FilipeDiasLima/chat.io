@@ -17,8 +17,8 @@ io.on("connection", (socket) => {
 
     if (error) return cb(error)
 
-    console.log(`${user.name}, welcome to the room ${user.room}`)
-    console.log(`${user.name} has joined!`);
+    socket.emit('message', { user: 'bot', text: `${user.name}, welcome to the room ${user.room}` });
+    socket.broadcast.to(user.room).emit('message', { user: 'bot', text: `${user.name} has joined!` });
 
     socket.join(user.room);
 
@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
     cb();
   })
 
-  socket.on("sendMessage", (message) => {
+  socket.on("sendMessage", (message, cb) => {
     const user = getUser(socket.id);
 
     io.to(user.room).emit('message', { user: user.name, text: message });
@@ -39,7 +39,9 @@ io.on("connection", (socket) => {
   socket.on('disconnect', () => {
     const user = removeUser(socket.id);
 
-    if (user) console.log(`${user.name} has left.`)
+    if (user) {
+      io.to(user.room).emit('message', { user: 'bot', text: `${user.name} has left.` })
+    }
 
   })
 });

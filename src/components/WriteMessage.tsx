@@ -1,11 +1,21 @@
-import { FormEvent, useEffect, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { RiSendPlaneFill } from "react-icons/ri";
 
-export function WriteMessage() {
-  const [text, setText] = useState("");
+type Props = {
+  message: string;
+  setMessage: Dispatch<SetStateAction<string>>;
+  sendMessage: () => void;
+};
 
+export function WriteMessage({ message, setMessage, sendMessage }: Props) {
   function handleInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setText(event.target.value);
+    setMessage(event.target.value);
 
     if (event.target.scrollHeight >= 260) {
       event.target.style.height = "260px";
@@ -52,12 +62,16 @@ export function WriteMessage() {
     "
     >
       <textarea
-        value={text}
+        value={message}
         onChange={handleInputChange}
         placeholder="Escreva uma mensagem..."
         className="bg-transparent placeholder:text-blue-secondary/80 focus:outline-none w-5/6 resize-none overflow-y-hidden dark:text-blue-secondary"
       />
-      <button type="button" className="p-4 bg-blue-secondary rounded-2xl">
+      <button
+        onClick={sendMessage}
+        type="button"
+        className="p-4 bg-blue-secondary rounded-2xl"
+      >
         <RiSendPlaneFill color="#FFF" size={22} />
       </button>
     </div>

@@ -1,13 +1,18 @@
-import { IoChatboxEllipses, IoAdd } from "react-icons/io5";
-import { FiChevronDown } from "react-icons/fi";
-import { MdOutlineWifi } from "react-icons/md";
-import { CgArrowsExchangeAltV } from "react-icons/cg";
-import { ChatCard } from "./ChatCard";
 import { useState } from "react";
 import { Collapse } from "react-collapse";
+import { CgArrowsExchangeAltV } from "react-icons/cg";
+import { FiChevronDown } from "react-icons/fi";
+import { IoAdd, IoChatboxEllipses } from "react-icons/io5";
+import { MdOutlineWifi } from "react-icons/md";
+import { useAuth } from "../useHook/useAuth";
 
 export function SideBar() {
   const [isOpenFinderUser, setIsOpenFinderUser] = useState(false);
+
+  const [userRoom, setUserRoom] = useState("");
+
+  const { setRoom } = useAuth();
+
   return (
     <aside
       className="
@@ -66,7 +71,7 @@ export function SideBar() {
               </p>
               <FiChevronDown color="#FFF" />
             </div>
-            <p className="text-xs antialiased  text-white">10 abertas</p>
+            <p className="text-xs antialiased  text-white">0 abertas</p>
           </div>
         </div>
 
@@ -92,14 +97,23 @@ export function SideBar() {
           rounded-b-3xl
         `}
         >
-          <p className="text-sm text-white">Iniciar chat com:</p>
+          <p className="text-sm text-white">Entrar na sala:</p>
           <div className="flex flex-row space-x-4">
             <input
-              placeholder="Nome do usuário..."
+              value={userRoom}
+              onChange={(e) => setUserRoom(e.target.value)}
+              placeholder="Nome da sala..."
               className="flex-1 p-2 text-sm rounded-lg"
               type="text"
             />
-            <button className="p-3 bg-blue-main rounded-lg">
+            <button
+              onClick={() => {
+                setUserRoom("");
+                setIsOpenFinderUser(false);
+                setRoom(userRoom);
+              }}
+              className="p-3 bg-blue-main rounded-lg"
+            >
               <IoAdd color="#FFF" size={18} />
             </button>
           </div>
@@ -107,10 +121,10 @@ export function SideBar() {
       </Collapse>
 
       <div className="mt-8 flex flex-col space-y-1">
-        <ChatCard />
+        {/* <ChatCard />
         <ChatCard />
         <ChatCard isSelected />
-        <ChatCard />
+        <ChatCard /> */}
       </div>
     </aside>
   );
