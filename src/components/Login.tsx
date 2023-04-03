@@ -1,10 +1,8 @@
 import Head from "next/head";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { noSSRAuth } from "../HOC/noSSRAuth";
 import ChatioSVG from "../assets/chatio.svg";
 import { useAuth } from "../useHook/useAuth";
-import { GetServerSideProps } from "next";
 
 export default function Login() {
   const [theme, setTheme] = useState("light");
@@ -78,9 +76,3 @@ export default function Login() {
     </>
   );
 }
-
-export const getServerSideProps = noSSRAuth(async (ctx) => {
-  return {
-    props: {},
-  };
-});

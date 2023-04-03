@@ -5,10 +5,10 @@ import { Scrollbar } from "./Scrollbar";
 import { WriteMessage } from "./WriteMessage";
 import io, { Socket } from "socket.io-client";
 
-type MessageProps = {
-  text: string;
-  user: string;
-};
+// type MessageProps = {
+//   text: string;
+//   user: string;
+// };
 
 const ENDPOINT = "localhost:3333";
 const socket = io(ENDPOINT);
@@ -17,25 +17,39 @@ export function ChatField() {
   const { username, room } = useAuth();
 
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<MessageProps[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   console.log("🚀 ~ file: ChatField.tsx:21 ~ ChatField ~ messages:", messages);
 
   function sendMessage() {
-    socket.emit("sendMessage", message.trim(), () => setMessage(""));
+    if (message !== "") {
+      const messageData = {
+        room,
+        username,
+        message,
+      };
+      console.log(
+        "🚀 ~ file: ChatField.tsx:26 ~ sendMessage ~ messageData:",
+        messageData
+      );
+
+      socket.emit("sendMessage", messageData);
+      setMessages([...messages, messageData]);
+      setMessage("");
+    }
   }
 
-  socket.emit("joinRoom", { name: username, room });
-
-  socket.on("message", (message) => {
-    setMessages([...messages, message]);
-  });
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      setMessages([...messages, data]);
+    });
+  }, [socket]);
 
   useEffect(() => {
     window.scrollTo(0, document.body.scrollHeight);
   }, []);
 
   useEffect(() => {
-    socket.emit("join", { name: username, room }, () => {});
+    socket.emit("join", room);
   }, [room, ENDPOINT]);
 
   return (

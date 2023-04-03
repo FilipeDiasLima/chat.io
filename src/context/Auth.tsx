@@ -1,5 +1,4 @@
 import Router from "next/router";
-import { parseCookies, setCookie } from "nookies";
 import {
   Dispatch,
   ReactNode,
@@ -8,11 +7,12 @@ import {
   useEffect,
   useState,
 } from "react";
-import io, { Socket } from "socket.io-client";
-
-let socket: Socket;
+import io from "socket.io-client";
+import Login from "../components/Login";
 
 const ENDPOINT = "localhost:3333";
+
+const socket = io(ENDPOINT);
 
 type AuthContextData = {
   username: string;
@@ -28,47 +28,22 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const cookies = parseCookies();
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
 
   function signIn(usernameParam: string) {
     setUsername(usernameParam);
-    setCookie(undefined, "@chatio.username", usernameParam, { path: "/" });
-    Router.push("/");
-
-    socket = io(ENDPOINT);
-    socket.emit("join", { name: usernameParam, room: usernameParam }, () => {});
-
-    return () => {
-      socket.emit("user-disconnected");
-
-      socket.off();
-    };
-  }
-
-  function connectSelfChat(username: string) {
-    socket = io(ENDPOINT);
-    socket.emit("join", { name: username, room: username }, () => {});
-
-    return () => {
-      socket.emit("disconnect");
-
-      socket.off();
-    };
+    setRoom(usernameParam);
+    socket.emit("join", usernameParam);
   }
 
   useEffect(() => {
-    const usernameCookie = cookies["@chatio.username"];
-    if (usernameCookie) {
-      setUsername(usernameCookie);
-      connectSelfChat(usernameCookie);
-    }
-  }, []);
+    socket.emit("join", room);
+  }, [room]);
 
   return (
     <AuthContext.Provider value={{ signIn, setRoom, username, room }}>
-      {children}
+      {username ? children : <Login />}
     </AuthContext.Provider>
   );
 }

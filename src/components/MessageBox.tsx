@@ -1,13 +1,14 @@
 type Props = {
   message: {
-    text: string;
-    user: string;
+    room: string;
+    username: string;
+    message: string;
   };
   name: string;
 };
 
 export function MessageBox({ message, name }: Props) {
-  const isSentByMe = name.trim().toLowerCase() === message.user;
+  const isSentByMe = name.trim().toLowerCase() === message.username;
   return (
     <li
       className={`flex ${
@@ -38,7 +39,7 @@ export function MessageBox({ message, name }: Props) {
           transition-all duration-200
         `}
       >
-        {message.text}
+        {message.message}
       </p>
     </li>
   );

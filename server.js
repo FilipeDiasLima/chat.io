@@ -12,37 +12,18 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("New connection with socket.io", socket.id);
 
-  socket.on('join', ({ name, room }, cb) => {
-    const { error, user } = addUser({ id: socket.id, name, room })
-
-    if (error) return cb(error)
-
-    socket.emit('message', { user: 'bot', text: `${user.name}, welcome to the room ${user.room}` });
-    socket.broadcast.to(user.room).emit('message', { user: 'bot', text: `${user.name} has joined!` });
-
-    socket.join(user.room);
-
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-
-    cb();
+  socket.on('join', (room) => {
+    socket.join(room);
+    console.log(`User with ID: ${socket.id} joined room: ${room}`);
   })
 
-  socket.on("sendMessage", (message, cb) => {
-    const user = getUser(socket.id);
-
-    io.to(user.room).emit('message', { user: user.name, text: message });
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
-
-    cb();
+  socket.on("sendMessage", (data) => {
+    console.log("🚀 ~ file: server.js:21 ~ socket.on ~ data:", data)
+    socket.to(data.room).emit('receive_message', data);
   });
 
   socket.on('disconnect', () => {
-    const user = removeUser(socket.id);
-
-    if (user) {
-      io.to(user.room).emit('message', { user: 'bot', text: `${user.name} has left.` })
-    }
-
+    console.log("User Disconnected", socket.id);
   })
 });
 
