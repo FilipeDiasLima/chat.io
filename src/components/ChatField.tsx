@@ -5,10 +5,11 @@ import { Scrollbar } from "./Scrollbar";
 import { WriteMessage } from "./WriteMessage";
 import io, { Socket } from "socket.io-client";
 
-// type MessageProps = {
-//   text: string;
-//   user: string;
-// };
+type MessageProps = {
+  room: string;
+  username: string;
+  message: string;
+};
 
 const ENDPOINT = "localhost:3333";
 const socket = io(ENDPOINT);
@@ -17,8 +18,7 @@ export function ChatField() {
   const { username, room } = useAuth();
 
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<any[]>([]);
-  console.log("🚀 ~ file: ChatField.tsx:21 ~ ChatField ~ messages:", messages);
+  const [messages, setMessages] = useState<MessageProps[]>([]);
 
   function sendMessage() {
     if (message !== "") {
@@ -27,20 +27,15 @@ export function ChatField() {
         username,
         message,
       };
-      console.log(
-        "🚀 ~ file: ChatField.tsx:26 ~ sendMessage ~ messageData:",
-        messageData
-      );
-
       socket.emit("sendMessage", messageData);
-      setMessages([...messages, messageData]);
+      setMessages((list) => [...list, messageData]);
       setMessage("");
     }
   }
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      setMessages([...messages, data]);
+      setMessages((list) => [...list, data]);
     });
   }, [socket]);
 

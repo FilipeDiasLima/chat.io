@@ -1,6 +1,5 @@
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-const { addUser, getUser, getUsersInRoom, removeUser } = require('./src/utils/users');
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -18,7 +17,6 @@ io.on("connection", (socket) => {
   })
 
   socket.on("sendMessage", (data) => {
-    console.log("🚀 ~ file: server.js:21 ~ socket.on ~ data:", data)
     socket.to(data.room).emit('receive_message', data);
   });
 
