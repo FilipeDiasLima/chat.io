@@ -1,8 +1,10 @@
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
+import { useAuth } from "../useHook/useAuth";
 import { ToggleThemeButton } from "./ToggleThemeButton";
 
 export function TopBar() {
+  const { toggleMenu } = useAuth();
   return (
     <div
       className="
@@ -29,7 +31,10 @@ export function TopBar() {
       transition-all duration-300 ease-out
       "
     >
-      <button className="p-2 bg-blue-secondary rounded-lg min-[800px]:hidden">
+      <button
+        onClick={toggleMenu}
+        className="p-2 bg-blue-secondary rounded-lg min-[800px]:hidden"
+      >
         <HiOutlineMenuAlt2 color="#FFF" size={18} />
       </button>
       <div className="flex flex-row bg-ice-light dark:bg-gray-700 rounded-xl w-3/6 max-[800px]:w-3/5 p-4 max-[800px]:p-2 items-center ">
@@ -42,8 +47,8 @@ export function TopBar() {
       </div>
       <ToggleThemeButton />
       <img
-        className="w-12 h-12 max-[800px]:hidden"
-        src="https://cdn-icons-png.flaticon.com/512/147/147142.png"
+        className="w-12 h-12 max-[800px]:hidden rounded-xl"
+        src="https://github.com/filipediaslima.png"
         alt=""
       />
     </div>

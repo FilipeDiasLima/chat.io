@@ -7,8 +7,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import Login from "../components/Login";
+import { Menu } from "../components/Menu";
 
 const ENDPOINT = "localhost:3333";
 
@@ -17,6 +18,8 @@ const socket = io(ENDPOINT);
 type AuthContextData = {
   username: string;
   room: string;
+  toggleMenu: () => void;
+  socket: Socket;
   signIn: (username: string) => void;
   setRoom: Dispatch<SetStateAction<string>>;
 };
@@ -30,11 +33,16 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  function toggleMenu() {
+    console.log("entrou");
+    setIsOpenMenu(!isOpenMenu);
+  }
 
   function signIn(usernameParam: string) {
     setUsername(usernameParam);
     setRoom(usernameParam);
-    socket.emit("join", usernameParam);
   }
 
   useEffect(() => {
@@ -42,7 +50,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [room]);
 
   return (
-    <AuthContext.Provider value={{ signIn, setRoom, username, room }}>
+    <AuthContext.Provider
+      value={{ signIn, toggleMenu, setRoom, username, room, socket }}
+    >
+      {isOpenMenu && <Menu />}
       {username ? children : <Login />}
     </AuthContext.Provider>
   );

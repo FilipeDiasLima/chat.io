@@ -97,12 +97,12 @@ export function SideBar() {
           rounded-b-3xl
         `}
         >
-          <p className="text-sm text-white">Entrar na sala:</p>
+          <p className="text-sm text-white">Conversar com:</p>
           <div className="flex flex-row space-x-4">
             <input
               value={userRoom}
               onChange={(e) => setUserRoom(e.target.value)}
-              placeholder="Nome da sala..."
+              placeholder="Nome do usuario..."
               className="flex-1 p-2 text-sm rounded-lg"
               type="text"
             />
@@ -119,6 +119,10 @@ export function SideBar() {
           </div>
         </div>
       </Collapse>
+
+      <p className="mt-2 text-center text-xs text-gray-600 dark:text-white">
+        Clique no botão acima para conversar com alguém
+      </p>
 
       <div className="mt-8 flex flex-col space-y-1">
         {/* <ChatCard />

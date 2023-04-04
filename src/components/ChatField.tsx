@@ -11,11 +11,8 @@ type MessageProps = {
   message: string;
 };
 
-const ENDPOINT = "localhost:3333";
-const socket = io(ENDPOINT);
-
 export function ChatField() {
-  const { username, room } = useAuth();
+  const { username, room, socket } = useAuth();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
@@ -34,18 +31,23 @@ export function ChatField() {
   }
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    const handleReceiveMessage = (data: any) => {
       setMessages((list) => [...list, data]);
-    });
+    };
+    socket.on("receive_message", handleReceiveMessage);
+
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+    };
   }, [socket]);
 
   useEffect(() => {
     window.scrollTo(0, document.body.scrollHeight);
-  }, []);
+  }, [messages]);
 
   useEffect(() => {
     socket.emit("join", room);
-  }, [room, ENDPOINT]);
+  }, [room]);
 
   return (
     <div

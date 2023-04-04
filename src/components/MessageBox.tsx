@@ -24,6 +24,7 @@ export function MessageBox({ message, name }: Props) {
         className={`
           ${isSentByMe ? "mr-4" : "ml-4"} 
           max-w-xl
+          min-w-[200px]
           ${isSentByMe ? "bg-transparent" : "bg-blue-secondary"}
           ${isSentByMe ? "border border-gray-300 dark:border-gray-500" : ""}
           max-[1440px]:max-w-md 
@@ -37,8 +38,15 @@ export function MessageBox({ message, name }: Props) {
           font-light 
           text-sm
           transition-all duration-200
+          flex
+          flex-col
         `}
       >
+        {!isSentByMe && (
+          <p className="text-xs text-gray-600 dark:text-white">
+            {message.username}
+          </p>
+        )}
         {message.message}
       </p>
     </li>

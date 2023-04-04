@@ -33,7 +33,7 @@ export default function Document() {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <body>
+      <body className="bg-ice-light dark:bg-gray-700">
         <Main />
         <NextScript />
       </body>
